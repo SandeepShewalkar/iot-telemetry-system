@@ -2,11 +2,15 @@ package storage
 
 import (
 	"os"
+	"sync"
 
 	"github.com/go-redis/redis/v8"
 )
 
-var rdb *redis.Client
+var (
+	rdb  *redis.Client
+	once sync.Once
+)
 
 func NewRedisClient(addr string) *redis.Client {
 	return redis.NewClient(&redis.Options{
@@ -15,9 +19,9 @@ func NewRedisClient(addr string) *redis.Client {
 }
 
 func GetRedisClient() *redis.Client {
-	redisAddr := os.Getenv("REDIS_ADDR")
-	if rdb == nil {
-		return NewRedisClient(redisAddr)
-	}
+	once.Do(func() {
+		redisAddr := os.Getenv("REDIS_ADDR")
+		rdb = NewRedisClient(redisAddr)
+	})
 	return rdb
 }
