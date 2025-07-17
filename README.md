@@ -1,7 +1,41 @@
 
-# IoT Telemetry Ingestion System
+# Problem Statement
 
-This project simulates and ingests high-frequency telemetry data from IoT devices (e.g., GPS data with IMEI, latitude, longitude, timestamp) and processes it via Kafka for downstream systems.
+  - Our platform ingests high-frequency telemetry from IoT devices via a message broker (choose NATS, Kafka, or RabbitMQ).
+  - Each message has the following structure:
+  ```
+    {
+    "imei": "string",
+    "latitude": float64,
+    "longitude": float64,
+    "device_time": int64 // milliseconds
+    }
+  ```
+  - Task:
+    1. Implement, in Golang, a service that consumes these messages.
+    2. For each imei, compute the cumulative distance travelled using the latitude/longitude
+stream and store the result (in Redis or a database of your choice).
+
+## 🧩 Solution Summary
+
+  - Kafka used for ingesting telemetry from IoT devices.
+
+  - imei used as message key for strict ordering.
+
+  - Go consumer service computes cumulative distance per device using Haversine formula.
+
+  - Redis stores last known coordinate and total distance per imei.
+
+## 🚧 Bottlenecks Addressed
+
+  - High Throughput: partitioned Kafka + concurrent Go consumers.
+
+  - Ordering: imei-based partitioning preserves ordering per device.
+
+  - Stateful logic offloaded to Redis (last coordinates + distances).
+
+  - Horizontal scalability: deploy more consumers as needed.
+
 
 ##  📡Project Structure
 
@@ -9,7 +43,6 @@ This project simulates and ingests high-frequency telemetry data from IoT device
 - iot-simulator: Simulates GPS events and sends them to the ingestor via HTTP POST requests.
 - deployment: Contains all configuration files for deploying the entire stack using Docker Compose, Docker Swarm, or Kubernetes.
 
----
 
 ## 📦 Docker Images
 
@@ -17,7 +50,7 @@ Prebuilt Docker images are available on Docker Hub:
 
 - `sshewalkar4094/telemetry-ingestor`
 - `sshewalkar4094/iot-simulator`
----
+
 
 ## Prerequisites
 
@@ -35,7 +68,6 @@ Please choose your environment:
 - Use `telemetry-manifests.yaml`.
 - Requires Minikube, CRC (CodeReady Containers), or a Kubernetes cluster.
 
----
 
 ## 🚀 Deployment Options
 
@@ -76,11 +108,9 @@ kubectl apply -f telemetry-manifests.yaml
 oc port-forward -n telemetry-system pod/<telemetry-gateway-pod-name> 8080:8080
 ```
 
----
 ## Documentation
 Swagger UI available at: http://localhost:8080/swagger/index.html.
 
----
 ## 📤 Sample Payload
 
 **Endpoint:** `POST /v1/telemetrybatch`
