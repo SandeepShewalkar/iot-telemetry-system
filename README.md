@@ -104,7 +104,7 @@ Swagger UI available at: http://localhost:8080/swagger/index.html.
 ```
 
 
-**Endpoint:** `GET v1/devices/121212121212121`
+**Endpoint:** `GET /v1/devices/121212121212121`
 
 Expected Output:
 
