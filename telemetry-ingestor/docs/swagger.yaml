@@ -1,0 +1,115 @@
+definitions:
+  model.Telemetry:
+    properties:
+      device_time:
+        type: integer
+      imei:
+        type: string
+      latitude:
+        type: number
+      longitude:
+        type: number
+    type: object
+  model.TelemetryBatchRequest:
+    properties:
+      events:
+        items:
+          $ref: '#/definitions/model.Telemetry'
+        type: array
+      imei:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/devices:
+    get:
+      description: Get list of devices/IMEI
+      produces:
+      - application/json
+      responses: {}
+      summary: Get device list registered
+  /v1/devices/{imei}:
+    get:
+      description: Get telemetry statistics for a specific device by IMEI
+      parameters:
+      - description: Device IMEI
+        in: path
+        name: imei
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get device statistics
+  /v1/telemetry:
+    post:
+      consumes:
+      - application/json
+      description: Accepts telemetry data in JSON format and publishes it to Kafka
+      parameters:
+      - description: Telemetry Payload
+        in: body
+        name: telemetry
+        required: true
+        schema:
+          $ref: '#/definitions/model.Telemetry'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Ingest telemetry data
+      tags:
+      - Telemetry
+  /v1/telemetrybatch:
+    post:
+      consumes:
+      - application/json
+      description: Accepts a batch of telemetry events from a single device (identified
+        by IMEI)
+      parameters:
+      - description: Batch telemetry payload
+        in: body
+        name: batch
+        required: true
+        schema:
+          $ref: '#/definitions/model.TelemetryBatchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: status and count of events queued
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: bad request error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Ingest batch telemetry events
+swagger: "2.0"

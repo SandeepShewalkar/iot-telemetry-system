@@ -1,0 +1,175 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/v1/devices": {
+            "get": {
+                "description": "Get list of devices/IMEI",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get device list registered",
+                "responses": {}
+            }
+        },
+        "/v1/devices/{imei}": {
+            "get": {
+                "description": "Get telemetry statistics for a specific device by IMEI",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get device statistics",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Device IMEI",
+                        "name": "imei",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/telemetry": {
+            "post": {
+                "description": "Accepts telemetry data in JSON format and publishes it to Kafka",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Telemetry"
+                ],
+                "summary": "Ingest telemetry data",
+                "parameters": [
+                    {
+                        "description": "Telemetry Payload",
+                        "name": "telemetry",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Telemetry"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/telemetrybatch": {
+            "post": {
+                "description": "Accepts a batch of telemetry events from a single device (identified by IMEI)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Ingest batch telemetry events",
+                "parameters": [
+                    {
+                        "description": "Batch telemetry payload",
+                        "name": "batch",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.TelemetryBatchRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status and count of events queued",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "bad request error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.Telemetry": {
+            "type": "object",
+            "properties": {
+                "device_time": {
+                    "type": "integer"
+                },
+                "imei": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                }
+            }
+        },
+        "model.TelemetryBatchRequest": {
+            "type": "object",
+            "properties": {
+                "events": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Telemetry"
+                    }
+                },
+                "imei": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
