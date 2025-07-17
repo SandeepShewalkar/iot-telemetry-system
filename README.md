@@ -39,9 +39,10 @@ stream and store the result (in Redis or a database of your choice).
 
 ##  📡Project Structure
 
-- telemetry-ingestor: Go service that consumes telemetry events, calculates cumulative distance per IMEI, and stores the results in Redis.
-- iot-simulator: Simulates GPS events and sends them to the ingestor via HTTP POST requests.
-- deployment: Contains all configuration files for deploying the entire stack using Docker Compose, Docker Swarm, or Kubernetes.
+- **telemetry-ingestor**: Go service that consumes telemetry events, calculates cumulative distance per IMEI, and stores the results in Redis.
+- **iot-simulator**: Simulates GPS events and sends them to the ingestor via HTTP POST requests.
+- **deployment**: Contains all configuration files for deploying the entire stack using Docker Compose, Docker Swarm, or Kubernetes.
+- **assignment**: contains the assignment pdf
 
 
 ## 📦 Docker Images
