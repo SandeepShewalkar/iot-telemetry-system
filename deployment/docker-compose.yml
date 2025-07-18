@@ -15,7 +15,7 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CREATE_TOPICS=telemetry:1:1
+      - KAFKA_CREATE_TOPICS=telemetry:3:1
     volumes:
       - kafka-data:/bitnami/kafka
 

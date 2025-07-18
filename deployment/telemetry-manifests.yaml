@@ -58,6 +58,8 @@ spec:
               value: "yes"
             - name: KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE
               value: "true"
+            - name: KAFKA_CREATE_TOPICS
+              value: "telemetry:3:1"
             - name: POD_NAME
               valueFrom:
                 fieldRef:
