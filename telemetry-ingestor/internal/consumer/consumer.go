@@ -14,7 +14,6 @@ import (
 )
 
 var (
-	ctx          = context.Background()
 	kafkaBroker  string
 	kafkaTopic   string
 	kafkaGroupID string
@@ -24,7 +23,7 @@ const (
 	keyPrefix string = "device:"
 )
 
-func StartKafkaConsumer() {
+func StartKafkaConsumer(ctx context.Context) {
 
 	validateAndSetKafkaEnv()
 
@@ -33,10 +32,15 @@ func StartKafkaConsumer() {
 		Topic:   kafkaTopic,
 		GroupID: kafkaGroupID,
 	})
+	defer reader.Close()
 
 	for {
 		m, err := reader.ReadMessage(ctx)
 		if err != nil {
+			if ctx.Err() != nil {
+				log.Println("Kafka consumer shutting down gracefully...")
+				return
+			}
 			log.Println("Error reading message:", err)
 			continue
 		}
@@ -47,11 +51,11 @@ func StartKafkaConsumer() {
 			continue
 		}
 
-		processTelemetry(t)
+		processTelemetry(t, ctx)
 	}
 }
 
-func processTelemetry(t model.Telemetry) {
+func processTelemetry(t model.Telemetry, ctx context.Context) {
 
 	redisClient := storage.GetRedisClient()
 	key := keyPrefix + t.IMEI

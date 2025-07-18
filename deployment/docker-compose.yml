@@ -27,6 +27,7 @@ services:
   gateway:
     build:
       context: ../telemetry-ingestor
+    image: sshewalkar4094/telemetry-ingestor:latest
     ports:
       - "8080:8080"
     depends_on:
@@ -40,6 +41,7 @@ services:
   iot-simulator:
     build:
       context: ../iot-simulator
+    image: sshewalkar4094/iot-simulator:latest
     depends_on:
       - gateway
     environment:
