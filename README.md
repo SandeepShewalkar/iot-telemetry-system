@@ -41,9 +41,13 @@ stream and store the result (in Redis or a database of your choice).
 
 - **iot-telemetry-system**: Created mono-repo just for simplicity. It has two projects - **telemetry-ingestor** and  **iot-simulator**.
 - **telemetry-ingestor**: Go service that consumes telemetry events, calculates cumulative distance per IMEI, and stores the results in Redis. It also contains end-points to get the stats and post data.
-- **iot-simulator**: Simulates GPS events and sends them to the ingestor via HTTP POST requests.
+- **iot-simulator**: Simulates IOT devices which sends events to the telemetry-ingestor via HTTP POST requests.
 - **deployment**: Contains all configuration files for deploying the entire stack using Docker Compose, Docker Swarm, or Kubernetes.
 - **assignment**: contains the assignment pdf
+
+## 🧪 Test Environment
+
+    - Windows machine with Docker Desktop and RedHat CRC installed
 
 
 ## 📦 Docker Images
