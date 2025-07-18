@@ -39,6 +39,7 @@ stream and store the result (in Redis or a database of your choice).
 
 ##  📡Project Structure
 
+- **iot-telemetry-system**: Created mono-repo just for simplicity. It has two projects - **telemetry-ingestor** and  **iot-simulator**.
 - **telemetry-ingestor**: Go service that consumes telemetry events, calculates cumulative distance per IMEI, and stores the results in Redis. It also contains end-points to get the stats and post data.
 - **iot-simulator**: Simulates GPS events and sends them to the ingestor via HTTP POST requests.
 - **deployment**: Contains all configuration files for deploying the entire stack using Docker Compose, Docker Swarm, or Kubernetes.
@@ -126,8 +127,8 @@ Swagger UI available at: http://localhost:8080/swagger/index.html.
       "device_time": 1721202000000
     },
     {
-      "latitude": 19.5210,
-      "longitude": 85.8572,
+      "latitude": 18.9582,
+      "longitude": 72.8321,
       "device_time": 2021202060000
     }
   ]
@@ -143,9 +144,9 @@ Expected Output:
 {
   "imei": "121212121212121",
   "data": {
-    "dist": "1266168.2113725634",
-    "lat": "19.521",
-    "lon": "85.8572"
+    "dist": "118364.64",
+    "lat": "18.9582",
+    "lon": "72.8321"
   }
 }
 ```
